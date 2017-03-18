@@ -1,13 +1,16 @@
 CC=g++
-# CC=gcc
 RM=rm -vf
 CPPFLAGS=-Wall -pedantic -Wextra
-SRCFILES=ftrest.cpp ftrestd.cpp
-OBJFILES= $(patsubst %.cpp, %.o, $(SRCFILES))
-PROGFILES= $(patsubst %.cpp, %, $(SRCFILES))
 
-.PHONY: all clean
+.PHONY: all clean 
 
-all: $(PROGFILES)
+all: client server
+
+client: ftrest.cpp
+	${CC} ${CPPFLAGS} ftrest.cpp -o ftrest
+
+server: ftrestd.cpp
+	${CC} ${CPPFLAGS} ftrestd.cpp -o ftrestd
+
 clean:
-	$(RM) $(OBJFILES) $(PROGFILES)
+	${RM} *.o  
