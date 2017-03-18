@@ -1,6 +1,6 @@
 CC=g++
 RM=rm -vf
-CPPFLAGS=-Wall -pedantic -Wextra
+CPPFLAGS=-std=c++11 -Wall -pedantic -Wextra
 
 .PHONY: all clean 
 
