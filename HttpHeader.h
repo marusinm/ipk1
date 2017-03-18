@@ -42,10 +42,10 @@ class HttpHeader {
      * @param str input string
      * @return capitalize string
      */
-    std::string capitalizeWord(std::string str){
-        std::transform(str.begin(), str.end(),str.begin(), ::toupper);
-        return str;
-    }
+//    std::string capitalizeWord(std::string str){
+//        std::transform(str.begin(), str.end(),str.begin(), ::toupper);
+//        return str;
+//    }
 
     /**
      * heper function
