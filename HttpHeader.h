@@ -18,7 +18,7 @@ class HttpHeader {
     std::string accept;
     std::string content_type;
     std::string file_folder_type;
-    std::string body; //it can be string or file
+    std::string body = ""; //it can be string or file
 
 
     /**
@@ -182,6 +182,7 @@ public:
         http_server_header+= "Content-Type: text/plain\n"; //FIXME: not constant
         http_server_header+= "Content-Length: " + std::to_string(getContentLength()) + "\n";
         http_server_header+= "Accept-Encoding: identity\n";
+//        http_server_header+= getBody();
 
         return http_server_header;
     }

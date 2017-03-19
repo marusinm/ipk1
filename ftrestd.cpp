@@ -14,7 +14,7 @@
 /**
  * SERVER side
  */
-int main (int argc, const char * argv[]) {
+int main (int argc, char **argv) {
     int rc;
     int welcome_socket;
     struct sockaddr_in6 sa;
@@ -22,38 +22,19 @@ int main (int argc, const char * argv[]) {
     char str[INET6_ADDRSTRLEN];
     int port_number;
     std::string root_folder;
-
-    //hending program options TODO:ASK osetrit aj viac krat zadanuy rovnaky parameter?
-    if (argc > 6) {
-        fprintf(stderr,"usage: %s  [-r ROOT-FOLDER] [-p PORT]\n", argv[0]);
-        exit(EXIT_FAILURE);
-    }
-    if(strcmp(argv[1],"-r") == 0) {
-        root_folder = argv[2];
-    }else if(strcmp(argv[1],"-p") == 0){
-        try {
-            port_number = std::stoi(argv[2]);
-        } catch (const std::exception& e) {
-            fprintf(stderr,"Port number must be integer!\n");
-            exit(EXIT_FAILURE);
+    
+    if (argc > 1) {
+        int opt;
+        while ((opt = getopt(argc, argv, "r:p:")) != EOF) {
+            switch (opt) {
+                case 'r':
+                    root_folder = optarg;
+                    break;
+                case 'p':
+                    port_number = strtol(optarg, &optarg, 0);
+                    break;
+            }
         }
-    }else{
-        fprintf(stderr,"usage: %s  [-r ROOT-FOLDER] [-p PORT]\n", argv[0]);
-        exit(EXIT_FAILURE);
-    }
-
-    if(strcmp(argv[3],"-p") == 0) {
-        try {
-            port_number = std::stoi(argv[4]);
-        } catch (const std::exception& e) {
-            fprintf(stderr,"Port number must be integer!\n");
-            exit(EXIT_FAILURE);
-        }
-    }else if(strcmp(argv[3],"-r") == 0){
-        root_folder = argv[4];
-    }else{
-        fprintf(stderr,"usage: %s  [-r ROOT-FOLDER] [-p PORT]\n", argv[0]);
-        exit(EXIT_FAILURE);
     }
 
 
@@ -92,85 +73,50 @@ int main (int argc, const char * argv[]) {
         {
             char buff[1024];
             int res = 0;
-//            for (;;) //TODO:ASK spytat sa co s tymto cyklom
-//            {
-                //refreah vars
+
             bzero(buff, 1024);
             current_command.error_found = false;
 
-            res = recv(comm_socket, buff, 1024,0);
-            if (res <= 0)
-                break;
+            std::string str_income_message = "";
+            while ((res = recv(comm_socket, buff, 1024,0)) > 0) {
+                str_income_message.append(buff);
+                bzero(buff, 1024);
+                if (res <= 0)
+                    break;
 
-//            std::cout << "test: " << buff << "\n";
+                if(res < 1024-1){
+                    break;
+                }
+            }
+
             Parser parser;
-            HttpHeader client_header = parser.headerParser(buff, false);
-//                std::cerr << "parsed finished: \n" << client_header.getRemotePath() << "\n";
-//                std::cerr << "parsed finished2: \n" << client_header.getFileFolderType() << "\n";
+            HttpHeader client_header = parser.headerParser(str_income_message, false);
 
             Commander commander;
             commander.do_cmd_from_header(client_header);
 
-
-            std::string command = client_header.getCommand();
-            std::string file_folder_type = client_header.getFileFolderType();
-
             HttpHeader server_header;
-//            std::string msg_body = "\r\n\r\n";
-            std::string msg_body("\r\n\r\n");
+            std::string msg_body = "\r\n\r\n";
             if(current_command.error_found){
-//                    std::cerr << "error: "<< current_command.getError() << "\n";
                 server_header.setResposneCode(current_command.getResponseCode());
                 msg_body += current_command.getError();
             }else{
-                std::cerr << "success\n";
-
-//                msg_body += current_command.getResponseBody();
+//                std::cerr << "success\n";
                 msg_body.append(current_command.getResponseBody());
             }
             server_header.setContentLength(strlen(msg_body.c_str()));
 
             std::string final_message = server_header.getServerHeader();
             final_message += msg_body;
-//                send(comm_socket, buff, strlen(buff), 0);
-//            if(send(comm_socket, final_message.c_str(), strlen(final_message.c_str()), 0) < 0){
-//            if(send(comm_socket, final_message.c_str(), strlen(final_message.c_str()), 0) < 0){
             if(send(comm_socket, final_message.data(), final_message.size(), 0) < 0){
                 std::cerr << "Unknown error.\n";
             };
-            //check if command is a get or put
-//            if(command.compare("GET") == 0 &&
-//                    file_folder_type.compare("file") == 0){                 //get command
-//                //TODO: iterativne posielanie suboru
-//                char buffer[1024];
-//                FILE *ptr;
-//                ptr = fopen(client_header.getRemotePath().c_str(), "rb");  // r for read, b for binary
-//                int position = 0;
-//                std::string file = "";
-//                while (position <= Commander::getFileSize(client_header.getRemotePath())){
-//                    bzero(buffer,1024);
-//                    fread(buffer, sizeof(buffer), 1, ptr);
-//                    position+=1024;
-//                    file+=buffer;
-//
-//
-//                    send(comm_socket, buffer, strlen(buffer), 0);
-//                }
-//                fclose(ptr);
-////                std::cerr << "output file \n" << file << "\n";
-//
-//            }else if (command.compare("PUT") == 0 &&
-//                        file_folder_type.compare("file") == 0){             //put command
-//                //TODO: iterativne prijmanie suboru
-//            }
-
         }
-//        }
         else
         {
             printf(".");
         }
-        printf("Connection to %s closed\n",str);
+//        printf("Connection to %s closed\n",str);
         close(comm_socket);
     }
 }

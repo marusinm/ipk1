@@ -13,16 +13,6 @@ class Parser{
      * @param ch1 char to be removed
      * @param ch2 char to be added
      */
-//    std::string replace_char(std::string s, char ch1, char ch2) {
-//        std::replace( s.begin(), s.end(), ch1, ch2);
-//        return s;
-//    }
-
-//    std::string getNextToken(std::string header, int current_pointer){
-//        std::string token = "";
-//
-//        return token;
-//    }
     bool replace(std::string& str, const std::string& from, const std::string& to) {
         size_t start_pos = str.find(from);
         if(start_pos == std::string::npos)
@@ -33,6 +23,17 @@ class Parser{
 
 
 public:
+    std::string parseFileFromPath(std::string path) {
+        std::string result = "";
+        for(int i = path.size()-1; i >= 0; i--){
+            if (path.at(i) == '/')
+                break;
+            std::string helper = result;
+            result = path.at(i) + helper;
+        }
+        return result;
+    }
+
     //TODO upravit aj na parsovanie server header + okomentovat
     HttpHeader headerParser(std::string str_header, bool isHeaderFromServer){
         HttpHeader header;
@@ -81,9 +82,7 @@ public:
             else if ("Content-Length:" == line.substr(0, location_tab_char))
             {
                 replace(line, "Content-Length:", "");
-                std::cerr << "test2.1\n" ;
                 header.setContentLength(std::stoi(line));
-                std::cerr << "test2.1.1\n" ;
                 continue;
             }
             else if(line.find("HTTP/1.1") != std::string::npos) {
@@ -122,9 +121,7 @@ public:
                     for (int i = location_tab_char + 1; i < location_tab_char + 4; ++i) {
                         response_code += line.at(i);
                     }
-                    std::cerr << "test2.2 "<<response_code<<"\n" ;
                     header.setResposneCode(std::stoi(response_code));
-                    std::cerr << "test2.2.1\n" ;
                 };
                 continue;
             }
@@ -136,4 +133,9 @@ public:
 
         return header;
     }
+
+    std::string parseFileFromPath();
 };
+
+
+

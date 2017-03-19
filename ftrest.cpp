@@ -134,9 +134,6 @@ int main (int argc, const char * argv[]) {
     bcopy((char *) server->h_addr, (char *) &server_address.sin_addr.s_addr, server->h_length);
     server_address.sin_port = htons(int_port);
 
-    /* tiskne informace o vzdalenem soketu */
-//    printf("INFO: Server socket: %s : %d \n", inet_ntoa(server_address.sin_addr), ntohs(server_address.sin_port));
-
     /* Vytvoreni soketu */
     if ((client_socket = socket(AF_INET, SOCK_STREAM, 0)) <= 0) {
         perror("ERROR: socket");
@@ -145,21 +142,18 @@ int main (int argc, const char * argv[]) {
 
     /* nacteni zpravy od uzivatele */
     bzero(buf, BUFSIZE);
-//    printf("Please enter msg: ");
-//    fgets(buf, BUFSIZE, stdin);
-
     HttpHeader client_header;
     client_header.setCommand(command);
     client_header.setRemotePath(remote_path_parsed);
     client_header.setHost(hostname);
     //TODO dorobit ify, doplnit hlavicku pre jednotlive prikazy-> content type, content length
-//    if (command.compare("lst") == 0) {
-//        //TODO: content type
-//    }else if (command.compare("put") == 0){
-//        //TODO: content type, content length
-//    }
-    strcat(buf, client_header.getClientHeader().c_str());
-    std::cerr << "Client header: \n"<< client_header.getClientHeader().c_str() << std::endl;
+    if (command.compare("put") == 0){
+        std::ifstream input( local_path, std::ios::binary );
+        std::string str((std::istreambuf_iterator<char>(input)),
+                        std::istreambuf_iterator<char>());
+        client_header.setBody(str);
+        client_header.setContentLength(str.size());
+    }
 
     if (connect(client_socket, (const struct sockaddr *) &server_address, sizeof(server_address)) != 0)
     {
@@ -168,38 +162,29 @@ int main (int argc, const char * argv[]) {
     }
 
     /* odeslani zpravy na server */
-    bytestx = send(client_socket, buf, strlen(buf), 0);
+    std::string final_message = client_header.getClientHeader() + "\r\n\r\n" + client_header.getBody();
+    std::cerr << "Client header: \n"<< final_message << std::endl;
+    if(bytesrx = send(client_socket, final_message.data(), final_message.size(), 0) < 0){
+        std::cerr << "Unknown error.\n";
+    };
     if (bytestx < 0)
-        perror("ERROR in sendto");
+        std::cerr << "Unknown error.\n";
 
     /* prijeti odpovedi a jeji vypsani */
     std::string str_respond = "";
-    //recive while there is some data
-//    char respond_buf[BUFSIZE];
-//    while ((bytesrx = recv(client_socket, (void *)respond_buf, BUFSIZE, 0)) > 0){
-
     bzero(buf, BUFSIZE);
-//    if(command.compare("get") != 0) {
-        while ((bytesrx = recv(client_socket, buf, BUFSIZE, 0)) > 0) {
-            str_respond.append(buf);
-            bzero(buf, BUFSIZE);
+    while ((bytesrx = recv(client_socket, buf, BUFSIZE, 0)) > 0) {
+        str_respond.append(buf);
+        bzero(buf, BUFSIZE);
+        if (bytesrx <= 0)
+            break;
+
+        if(bytesrx < BUFSIZE-1){
+            break;
         }
-//    }else{
-//
-        //if get read only header one time
-//        bytesrx = recv(client_socket, buf, BUFSIZE, 0);
-//        str_respond.append(buf);
-//        bzero(buf, BUFSIZE);
-//
-//    }
-    std::cerr<<"heder from server: "<< str_respond <<"\n";
+    }
     Parser parser;
     HttpHeader respond_header = parser.headerParser(str_respond, true);
-#ifdef DEBUG_HEADER_INFO
-//    std::cerr << "FINAL ECHO: \n" << str_respond << "\n";
-//    std::cerr << "respond code: \n" << respond_header.getResposneCode()<< "\n";
-//    std::cerr << "Body: \n" << respond_header.getBody()<< "\n\n\n";
-#endif
 
     if (respond_header.getResposneCode() != 200){
         std::cerr << respond_header.getBody()<< "\n";
@@ -212,31 +197,11 @@ int main (int argc, const char * argv[]) {
             }
             std::cout << std::endl;
         }else if(command.compare("get") == 0){
-//            char buffer[BUFSIZE];
-//            int loaded_data = 0;
-//            std::string income_file = "";
-//            while ((bytesrx = recv(client_socket, buffer, BUFSIZE, 0)) > 0){
-//                income_file.append(buffer);
-//                bzero(buffer, BUFSIZE);
-//
-////                if(bytesrx == BUFSIZE)
-////                    loaded_data+=BUFSIZE;
-//                loaded_data+=BUFSIZE;
-//
-//                if (std::stoi(respond_header.getBody()) <= loaded_data){
-//                    std::cerr << "here stop!!!"<<"\n";
-//                    break;
-//                }
-//
-//                if(bytesrx < BUFSIZE-1){
-//                    break;
-//                }
-//            }
-//            std::ofstream out("/Users/Marek/Documents/output.txt",std::ios::binary);
-//            out << income_file;
-
-            std::ofstream out("/Users/Marek/Documents/output.txt",std::ios::binary);
-            std::cerr << "test5\n" ;
+            std::string path = "./";
+            std::string output_file_name = parser.parseFileFromPath(client_header.getRemotePath());
+            path+=output_file_name;
+//            std::cerr<<"path: "<<path<<"\n";
+            std::ofstream out(path,std::ios::binary);
             out << respond_header.getBody();
         }
     }

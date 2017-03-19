@@ -324,6 +324,25 @@ class Commander{
         return true;
     }
 
+    bool put(std::string remote_path) {
+        //check if user exist
+        if (false == checkIfUserAccountExists(remote_path)) {
+            current_command.setError("User Account Not Found");
+            current_command.setResponseCode(404);
+            return false;
+        }
+        //check if path is pointer to file
+        if (1 == checkIfPathIsFileOrDirectory(remote_path)) {
+            current_command.setError("Not a file.");
+            current_command.setResponseCode(400);
+            return false;
+        }
+//        std::cerr<<"path: "<<remo<<"\n";
+        std::ofstream out(remote_path,std::ios::binary);
+        out << httpHeader.getBody();
+        return true;
+    }
+
 
 public:
 //    long getFileSize(std::string filename)
@@ -366,6 +385,10 @@ public:
                 isExecuted = true;
             else
                 isExecuted = false;
+
+        }else if(command.compare("PUT") == 0 &&
+                 file_folder_type.compare("file") == 0){                 //put command
+            isExecuted = put(httpHeader.getRemotePath());
 
         }else if(command.compare("DELETE") == 0 &&
                  file_folder_type.compare("file") == 0) {                //del command
