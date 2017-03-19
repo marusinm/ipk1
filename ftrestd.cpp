@@ -134,7 +134,8 @@ int main (int argc, const char * argv[]) {
 //                send(comm_socket, buff, strlen(buff), 0);
 //            if(send(comm_socket, final_message.c_str(), strlen(final_message.c_str()), 0) < 0){
             std::cerr << "server 3\n";
-            if(send(comm_socket, final_message.data(), final_message.size(), 0) < 0){
+            if(send(comm_socket, final_message.c_str(), strlen(final_message.c_str()), 0) < 0){
+//            if(send(comm_socket, final_message.data(), final_message.size(), 0) < 0){
                 std::cerr << "Unknown error.\n";
             };
             std::cerr << "server 4\n";
