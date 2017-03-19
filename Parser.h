@@ -45,51 +45,43 @@ public:
             int location_tab_char = line.find_first_of(" ");
             int loacation_End_chars = line.find_first_of("\r\n");
 
-            std::cerr << "test1" << "\n";
             if ("Host:" == line.substr(0, location_tab_char))
             {
-                std::cerr << "test1.1" << "\n";
                 replace(line, "Host:", "");
                 header.setHost(line);
                 continue;
             }
             else if ("Date:" == line.substr(0, location_tab_char))
             {
-                std::cerr << "test1.2" << "\n";
                 replace(line, "Date:", "");
                 header.setTimeStamp(line);
                 continue;
             }
             else if ("Accept:" == line.substr(0, location_tab_char))
             {
-                std::cerr << "test1.3" << "\n";
                 replace(line, "Accept:", "");
                 header.setAccept(line);
                 continue;
             }
             else if ("Accept-Encoding:" == line.substr(0, location_tab_char))
             {
-                std::cerr << "test1.4" << "\n";
                 //do nothing
                 continue;
             }
             else if ("Content-Type:" == line.substr(0, location_tab_char))
             {
-                std::cerr << "test1.5" << "\n";
                 replace(line, "Content-Type:", "");
                 header.setContentType(line);
                 continue;
             }
             else if ("Content-Length:" == line.substr(0, location_tab_char))
             {
-                std::cerr << "test1.6" << "\n";
                 replace(line, "Content-Length:", "");
                 header.setContentLength(stoi(line));
                 continue;
             }
             else if(line.find("HTTP/1.1") != std::string::npos) {
 
-                std::cerr << "test1.7" << "\n";
                 if (!isHeaderFromServer) {
                     //this is parsing of first line
                     std::string command = line.substr(0, location_tab_char);
@@ -130,9 +122,7 @@ public:
             }
 
         }
-        std::cerr << "test2" << "\n";
         size_t pointer = str_header.find("\r\n\r\n");
-        std::cerr << "test3" << "\n";
         std::string body = str_header.substr(pointer+4,pointer+header.getContentLength());
         header.setBody(body);
 

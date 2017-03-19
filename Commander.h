@@ -257,7 +257,7 @@ class Commander{
         if(false == checkIfDirectoryExists(remote_path)){
             current_command.setError("Directory not found.");
             current_command.setResponseCode(404);
-            return std::string("");
+            return result;
         }
         DIR *mydir;
         struct dirent *myfile;
