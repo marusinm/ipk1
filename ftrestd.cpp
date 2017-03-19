@@ -67,9 +67,6 @@ int main (int argc, char **argv) {
         exit(EXIT_FAILURE);
     }
 
-    //fixme: odstranit tieto dva riadky, su tu len nato aby mi nesvietil nekonecny cyklus
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wmissing-noreturn"os
     while(1)
     {
         int comm_socket = accept(welcome_socket, (struct sockaddr*)&sa_client, &sa_client_len);

@@ -61,7 +61,7 @@ class Commander{
     }
 
     bool checkIfUserAccountExists(std::string remote_path){
-        if (root_folder.compare("./") == 0){
+        if (root_folder.compare(".") == 0){
             return true;
         }
         std::string str_user = "/";
