@@ -118,7 +118,7 @@ public:
                     for (int i = location_tab_char + 1; i < location_tab_char + 4; ++i) {
                         response_code += line.at(i);
                     }
-                    std::cerr << "test2.2\n" ;
+                    std::cerr << "test2.2 "<<response_code<<"\n" ;
                     header.setResposneCode(std::stoi(response_code));
                     std::cerr << "test2.2.1\n" ;
                 };
