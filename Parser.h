@@ -37,8 +37,12 @@ public:
     HttpHeader headerParser(std::string str_header, bool isHeaderFromServer){
         HttpHeader header;
 
+        size_t pointer = str_header.find("\r\n\r\n");
+        std::string header_stirng = str_header.substr(0,pointer);
+
+
         //parse line by line
-        std::istringstream f(str_header);
+        std::istringstream f(header_stirng);
         std::string line;
 
         while (std::getline(f, line)) {
@@ -126,7 +130,7 @@ public:
             }
 
         }
-        size_t pointer = str_header.find("\r\n\r\n");
+//        size_t pointer = str_header.find("\r\n\r\n");
         std::string body = str_header.substr(pointer+4,pointer+header.getContentLength());
         header.setBody(body);
 
