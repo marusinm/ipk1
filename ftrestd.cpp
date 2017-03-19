@@ -116,7 +116,8 @@ int main (int argc, const char * argv[]) {
             std::string file_folder_type = client_header.getFileFolderType();
 
             HttpHeader server_header;
-            std::string msg_body = "\r\n\r\n";
+//            std::string msg_body = "\r\n\r\n";
+            std::string msg_body("\r\n\r\n");
             if(current_command.error_found){
 //                    std::cerr << "error: "<< current_command.getError() << "\n";
                 server_header.setResposneCode(current_command.getResponseCode());
