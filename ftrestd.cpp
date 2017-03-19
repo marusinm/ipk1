@@ -124,7 +124,7 @@ int main (int argc, const char * argv[]) {
             }else{
                 std::cerr << "success\n";
 
-                msg_body += current_command.getResponseBody();
+//                msg_body += current_command.getResponseBody();
             }
             std::cerr << "server 1\n";
             server_header.setContentLength(strlen(msg_body.c_str()));
