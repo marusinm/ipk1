@@ -21,7 +21,6 @@
  */
 int main (int argc, const char * argv[]) {
     int client_socket, int_port, bytestx, bytesrx;
-    socklen_t serverlen;
     const char *server_hostname;
     struct hostent *server;
     struct sockaddr_in server_address;
@@ -164,11 +163,9 @@ int main (int argc, const char * argv[]) {
     /* odeslani zpravy na server */
     std::string final_message = client_header.getClientHeader() + "\r\n\r\n" + client_header.getBody();
 //    std::cerr << "Client header: \n"<< final_message << std::endl;
-    if(bytesrx = send(client_socket, final_message.data(), final_message.size(), 0) < 0){
+    if(send(client_socket, final_message.data(), final_message.size(), 0) < 0){
         std::cerr << "Unknown error.\n";
     };
-    if (bytestx < 0)
-        std::cerr << "Unknown error.\n";
 
     /* prijeti odpovedi a jeji vypsani */
     std::string str_respond = "";

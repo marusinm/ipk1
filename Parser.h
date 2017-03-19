@@ -48,7 +48,6 @@ public:
 
         while (std::getline(f, line)) {
             int location_tab_char = line.find_first_of(" ");
-            int loacation_End_chars = line.find_first_of("\r\n");
 
             if ("Host:" == line.substr(0, location_tab_char))
             {
@@ -96,7 +95,7 @@ public:
 //                std::string remote_path = line.substr(location_tab_char + 1, line.find_last_of(" ") - 4);
 //                std::string remote_path = line.substr(location_tab_char + 1, line.find_first_of("?") - 4)
                     std::string remote_path = "";
-                    for (int i = position + 1; i < line.size(); ++i) {
+                    for (int i = position + 1; i < (int)line.size(); ++i) {
                         if (line.at(i) == '?') {
                             break;
                         }
