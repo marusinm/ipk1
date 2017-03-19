@@ -77,6 +77,7 @@ public:
             else if ("Content-Length:" == line.substr(0, location_tab_char))
             {
                 replace(line, "Content-Length:", "");
+                std::cerr << "test2.1\n" ;
                 header.setContentLength(stoi(line));
                 continue;
             }
@@ -116,6 +117,7 @@ public:
                     for (int i = location_tab_char + 1; i < location_tab_char + 4; ++i) {
                         response_code += line.at(i);
                     }
+                    std::cerr << "test2.2\n" ;
                     header.setResposneCode(stoi(response_code));
                 };
                 continue;
