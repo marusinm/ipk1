@@ -69,7 +69,7 @@ int main (int argc, char **argv) {
 
     //fixme: odstranit tieto dva riadky, su tu len nato aby mi nesvietil nekonecny cyklus
 #pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wmissing-noreturn"
+#pragma clang diagnostic ignored "-Wmissing-noreturn"os
     while(1)
     {
         int comm_socket = accept(welcome_socket, (struct sockaddr*)&sa_client, &sa_client_len);
@@ -95,9 +95,9 @@ int main (int argc, char **argv) {
 
             Parser parser;
             HttpHeader client_header = parser.headerParser(str_income_message, false);
-            client_header.setRemotePath(root_folder+=client_header.getRemotePath());
+//            client_header.setRemotePath(root_folder+=client_header.getRemotePath());
 
-            Commander commander;
+            Commander commander(root_folder);
             commander.do_cmd_from_header(client_header);
 
             HttpHeader server_header;

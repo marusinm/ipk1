@@ -50,6 +50,7 @@ public:
 
 class Commander{
     HttpHeader httpHeader;
+    std::string root_folder = "";
 
     bool checkIfDirectoryExists(std::string remote_path){
         DIR *dir = opendir(remote_path.c_str());
@@ -351,16 +352,19 @@ public:
 //        int rc = stat(filename.c_str(), &stat_buf);
 //        return rc == 0 ? stat_buf.st_size : -1;
 //    }
-    static int getFileSize(std::string filename) // path to file
-    {
-        FILE *p_file = NULL;
-        p_file = fopen(filename.c_str(),"rb");
-        fseek(p_file,0,SEEK_END);
-        int size = ftell(p_file);
-        fclose(p_file);
-        return size;
-    }
+//    static int getFileSize(std::string filename) // path to file
+//    {
+//        FILE *p_file = NULL;
+//        p_file = fopen(filename.c_str(),"rb");
+//        fseek(p_file,0,SEEK_END);
+//        int size = ftell(p_file);
+//        fclose(p_file);
+//        return size;
+//    }
 
+    Commander(std::string root){
+        this->root_folder = root;
+    }
 
     bool do_cmd_from_header(HttpHeader httpHeader){
         this->httpHeader = httpHeader;
@@ -369,14 +373,15 @@ public:
         bool isExecuted = true;
         std::string command = httpHeader.getCommand();
         std::string file_folder_type = httpHeader.getFileFolderType();
+        std::string path = root_folder + httpHeader.getRemotePath();
         current_command.setCommand(command);
         if (command.compare("PUT") == 0 &&
             file_folder_type.compare("folder") == 0){                   //mkd command
-            isExecuted = mkd(httpHeader.getRemotePath());
+            isExecuted = mkd(path);
 
         }else if(command.compare("DELETE") == 0 &&
                  file_folder_type.compare("folder") == 0){              //rmd command
-            isExecuted = rmd(httpHeader.getRemotePath());
+            isExecuted = rmd(path);
 
         }else if(command.compare("GET") == 0 &&
                  file_folder_type.compare("folder") == 0){              //lst command
@@ -388,15 +393,15 @@ public:
 
         }else if(command.compare("PUT") == 0 &&
                  file_folder_type.compare("file") == 0){                 //put command
-            isExecuted = put(httpHeader.getRemotePath());
+            isExecuted = put(path);
 
         }else if(command.compare("DELETE") == 0 &&
                  file_folder_type.compare("file") == 0) {                //del command
-            isExecuted = del(httpHeader.getRemotePath());
+            isExecuted = del(path);
 
         }else if(command.compare("GET") == 0 &&
                  file_folder_type.compare("file") == 0){                 //get command
-            isExecuted = get(httpHeader.getRemotePath());
+            isExecuted = get(path);
         }
 
         if (!isExecuted){
