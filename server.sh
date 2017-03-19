@@ -1,3 +1,3 @@
 #!/usr/bin/bash
 
-./ftrestd -r ahoj -p 12345 &
+./ftrestd -p 12345 &
