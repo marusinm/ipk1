@@ -239,19 +239,19 @@ class Commander{
      * return empty string if error ocured, string of files otherwise
      */
     std::string lst(std::string remote_path){
-//        std::string result = "";
-        std::string result("");
+        std::string result = "";
         //check if user exist
         if(false == checkIfUserAccountExists(remote_path)){
             current_command.setError("User Account Not Found");
             current_command.setResponseCode(404);
-            return std::string("");
+//            return std::string("");
+            return result;
         }
         //check if path is pointer to directory
         if (2 == checkIfPathIsFileOrDirectory(remote_path)){
             current_command.setError("Not a directory.");
             current_command.setResponseCode(400);
-            return std::string("");
+            return result;
         }
         //check if derectory exist
         if(false == checkIfDirectoryExists(remote_path)){
@@ -273,6 +273,7 @@ class Commander{
         }
         closedir(mydir);
         current_command.setResponseBody(result);
+        return result;
     }
 
     bool del(std::string remote_path){
