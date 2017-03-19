@@ -184,7 +184,6 @@ int main (int argc, const char * argv[]) {
             str_respond.append(buf);
             bzero(buf, BUFSIZE);
         }
-    std::cerr << "test1\n" ;
 //    }else{
 //
         //if get read only header one time
@@ -193,10 +192,9 @@ int main (int argc, const char * argv[]) {
 //        bzero(buf, BUFSIZE);
 //
 //    }
+    std::cerr<<"heder from server: "<< str_respond <<"\n";
     Parser parser;
-    std::cerr << "test2\n" ;
     HttpHeader respond_header = parser.headerParser(str_respond, true);
-    std::cerr << "test3\n" ;
 #ifdef DEBUG_HEADER_INFO
 //    std::cerr << "FINAL ECHO: \n" << str_respond << "\n";
 //    std::cerr << "respond code: \n" << respond_header.getResposneCode()<< "\n";
@@ -214,7 +212,6 @@ int main (int argc, const char * argv[]) {
             }
             std::cout << std::endl;
         }else if(command.compare("get") == 0){
-            std::cerr << "test4\n" ;
 //            char buffer[BUFSIZE];
 //            int loaded_data = 0;
 //            std::string income_file = "";

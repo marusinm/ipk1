@@ -134,8 +134,8 @@ int main (int argc, const char * argv[]) {
             final_message += msg_body;
 //                send(comm_socket, buff, strlen(buff), 0);
 //            if(send(comm_socket, final_message.c_str(), strlen(final_message.c_str()), 0) < 0){
-            if(send(comm_socket, final_message.c_str(), strlen(final_message.c_str()), 0) < 0){
-//            if(send(comm_socket, final_message.data(), final_message.size(), 0) < 0){
+//            if(send(comm_socket, final_message.c_str(), strlen(final_message.c_str()), 0) < 0){
+            if(send(comm_socket, final_message.data(), final_message.size(), 0) < 0){
                 std::cerr << "Unknown error.\n";
             };
             //check if command is a get or put
