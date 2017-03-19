@@ -125,12 +125,14 @@ int main (int argc, const char * argv[]) {
                 std::cerr << "success\n";
 
 //                msg_body += current_command.getResponseBody();
+                msg_body.append(current_command.getResponseBody());
             }
             std::cerr << "server 1\n";
             server_header.setContentLength(strlen(msg_body.c_str()));
 
             std::cerr << "server 2\n";
             std::string final_message = server_header.getServerHeader();
+            std::cerr << "server 2.2\n";
             final_message += msg_body;
 //                send(comm_socket, buff, strlen(buff), 0);
 //            if(send(comm_socket, final_message.c_str(), strlen(final_message.c_str()), 0) < 0){
