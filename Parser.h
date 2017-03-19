@@ -116,7 +116,7 @@ public:
                     for (int i = location_tab_char + 1; i < location_tab_char + 4; ++i) {
                         response_code += line.at(i);
                     }
-                    header.setResposneCode(std::stoi(response_code));
+                    header.setResposneCode(stoi(response_code));
                 };
                 continue;
             }
