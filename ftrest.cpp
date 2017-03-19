@@ -20,7 +20,7 @@
  * CLIENT side
  */
 int main (int argc, const char * argv[]) {
-    int client_socket, int_port, bytestx, bytesrx;
+    int client_socket, int_port, bytesrx;
     const char *server_hostname;
     struct hostent *server;
     struct sockaddr_in server_address;

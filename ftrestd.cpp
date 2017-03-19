@@ -19,7 +19,6 @@ int main (int argc, char **argv) {
     int welcome_socket;
     struct sockaddr_in6 sa;
     struct sockaddr_in6 sa_client;
-    char str[INET6_ADDRSTRLEN];
     int port_number;
     std::string root_folder = ".";
 
