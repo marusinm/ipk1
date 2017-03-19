@@ -78,7 +78,7 @@ public:
             {
                 replace(line, "Content-Length:", "");
                 std::cerr << "test2.1\n" ;
-                header.setContentLength(stoi(line));
+                header.setContentLength(std::stoi(line));
                 std::cerr << "test2.1.1\n" ;
                 continue;
             }
@@ -119,7 +119,7 @@ public:
                         response_code += line.at(i);
                     }
                     std::cerr << "test2.2\n" ;
-                    header.setResposneCode(stoi(response_code));
+                    header.setResposneCode(std::stoi(response_code));
                     std::cerr << "test2.2.1\n" ;
                 };
                 continue;
