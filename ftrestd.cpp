@@ -126,15 +126,18 @@ int main (int argc, const char * argv[]) {
 
                 msg_body += current_command.getResponseBody();
             }
+            std::cerr << "server 1\n";
             server_header.setContentLength(strlen(msg_body.c_str()));
 
+            std::cerr << "server 2\n";
             std::string final_message = server_header.getServerHeader() + msg_body;
 //                send(comm_socket, buff, strlen(buff), 0);
 //            if(send(comm_socket, final_message.c_str(), strlen(final_message.c_str()), 0) < 0){
+            std::cerr << "server 3\n";
             if(send(comm_socket, final_message.data(), final_message.size(), 0) < 0){
-                //TODO:ASK: error
+                std::cerr << "Unknown error.\n";
             };
-
+            std::cerr << "server 4\n";
             //check if command is a get or put
 //            if(command.compare("GET") == 0 &&
 //                    file_folder_type.compare("file") == 0){                 //get command
