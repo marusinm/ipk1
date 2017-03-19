@@ -21,8 +21,8 @@ int main (int argc, char **argv) {
     struct sockaddr_in6 sa_client;
     char str[INET6_ADDRSTRLEN];
     int port_number;
-    std::string root_folder;
-    
+    std::string root_folder = ".";
+
     if (argc > 1) {
         int opt;
         while ((opt = getopt(argc, argv, "r:p:")) != EOF) {
@@ -35,6 +35,10 @@ int main (int argc, char **argv) {
                     break;
             }
         }
+    }
+
+    if (root_folder.back() == '/'){
+        root_folder = root_folder.substr(0, root_folder.size()-1);
     }
 
 
@@ -91,6 +95,7 @@ int main (int argc, char **argv) {
 
             Parser parser;
             HttpHeader client_header = parser.headerParser(str_income_message, false);
+            client_header.setRemotePath(root_folder+=client_header.getRemotePath());
 
             Commander commander;
             commander.do_cmd_from_header(client_header);

@@ -163,7 +163,7 @@ int main (int argc, const char * argv[]) {
 
     /* odeslani zpravy na server */
     std::string final_message = client_header.getClientHeader() + "\r\n\r\n" + client_header.getBody();
-    std::cerr << "Client header: \n"<< final_message << std::endl;
+//    std::cerr << "Client header: \n"<< final_message << std::endl;
     if(bytesrx = send(client_socket, final_message.data(), final_message.size(), 0) < 0){
         std::cerr << "Unknown error.\n";
     };
