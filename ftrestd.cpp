@@ -130,7 +130,8 @@ int main (int argc, const char * argv[]) {
             server_header.setContentLength(strlen(msg_body.c_str()));
 
             std::cerr << "server 2\n";
-            std::string final_message = server_header.getServerHeader() + msg_body;
+            std::string final_message = server_header.getServerHeader();
+            final_message += msg_body;
 //                send(comm_socket, buff, strlen(buff), 0);
 //            if(send(comm_socket, final_message.c_str(), strlen(final_message.c_str()), 0) < 0){
             std::cerr << "server 3\n";
