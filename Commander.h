@@ -50,7 +50,7 @@ public:
 
 class Commander{
     HttpHeader httpHeader;
-    std::string root_folder = "";
+    std::string root_folder = ".";
 
     bool checkIfDirectoryExists(std::string remote_path){
         DIR *dir = opendir(remote_path.c_str());
@@ -175,7 +175,7 @@ class Commander{
      * @result false if error ocured (error info in current_command)
      */
     bool mkd(std::string remote_path){
-        //check if user exist
+        //check if user existgit
         if(false == checkIfUserAccountExists(remote_path)){
             current_command.setError("User Account Not Found");
             current_command.setResponseCode(404);
