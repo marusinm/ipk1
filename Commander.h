@@ -50,38 +50,38 @@ public:
 
 class Commander{
     HttpHeader httpHeader;
-    std::string root_folder = ".";
+    std::string root_folder = "";
 
     bool checkIfDirectoryExists(std::string remote_path){
-        DIR *dir = opendir(remote_path.c_str());
-        if (dir == NULL) {
-            return false;
-        }
+        // DIR *dir = opendir(remote_path.c_str());
+        // if (dir == NULL) {
+        //     return false;
+        // }
         return true;
     }
 
     bool checkIfUserAccountExists(std::string remote_path){
-        if (root_folder.compare(".") == 0){
-            return true;
-        }
-        std::string str_user = "/";
-        int slashcount = 0;
-        for(char& c : remote_path) {
+        // if (root_folder.compare(".") == 0){
+        //     return true;
+        // }
+        // std::string str_user = "/";
+        // int slashcount = 0;
+        // for(char& c : remote_path) {
 
-            if (slashcount == 2){//user is finded
-                break;
-            }
+        //     if (slashcount == 2){//user is finded
+        //         break;
+        //     }
 
-            if(c == '/') {
-                slashcount++;
-                continue;
-            }
-            str_user+=c;
-        }
-        DIR *dir = opendir(str_user.c_str());
-        if (dir == NULL) {
-            return false;
-        }
+        //     if(c == '/') {
+        //         slashcount++;
+        //         continue;
+        //     }
+        //     str_user+=c;
+        // }
+        // DIR *dir = opendir(str_user.c_str());
+        // if (dir == NULL) {
+        //     return false;
+        // }
         return true;
     }
 
@@ -388,7 +388,7 @@ public:
 
         }else if(command.compare("GET") == 0 &&
                  file_folder_type.compare("folder") == 0){              //lst command
-            std::string result = lst(httpHeader.getRemotePath());
+            std::string result = lst(path);
             if (result.compare("") == 0)
                 isExecuted = true;
             else
